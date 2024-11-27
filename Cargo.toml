@@ -1,0 +1,8 @@
+[package]
+name = "sha1sum"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+authors = ["Christopher Atherton <the8lack8ox@pm.me>"]
+
+[dependencies]
