@@ -24,14 +24,14 @@ use std::env;
 use std::fs::File;
 use std::io::{Read, Result};
 
-struct Sha1Hasher {
+struct Sha1 {
     hash: [u32; 5],
     buffer: Vec<u8>,
     length: usize,
     finished: bool,
 }
 
-impl Sha1Hasher {
+impl Sha1 {
     pub fn new() -> Self {
         Self {
             hash: [0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0],
@@ -416,27 +416,27 @@ fn run() -> Result<()> {
     let inputs: Vec<_> = env::args().skip(1).collect();
 
     if inputs.is_empty() {
-        let mut hasher = Sha1Hasher::new();
+        let mut sha = Sha1::new();
         let mut buffer = [0; 8192];
         let mut count = std::io::stdin().read(&mut buffer)?;
         while count > 0 {
-            hasher.update(&buffer[..count]);
+            sha.update(&buffer[..count]);
             count = std::io::stdin().read(&mut buffer)?;
         }
-        hasher.finish();
-        println!("{} -", hasher.hash_as_string());
+        sha.finish();
+        println!("{} -", sha.hash_as_string());
     } else {
-        for input in &inputs {
-            let mut hasher = Sha1Hasher::new();
+        for input in inputs {
+            let mut sha = Sha1::new();
             let mut buffer = [0; 8192];
-            let mut file = File::open(input)?;
+            let mut file = File::open(&input)?;
             let mut count = file.read(&mut buffer)?;
             while count > 0 {
-                hasher.update(&buffer[..count]);
+                sha.update(&buffer[..count]);
                 count = file.read(&mut buffer)?;
             }
-            hasher.finish();
-            println!("{} {input}", hasher.hash_as_string());
+            sha.finish();
+            println!("{} {input}", sha.hash_as_string());
         }
     }
 
@@ -447,7 +447,7 @@ fn main() {
     match run() {
         Ok(()) => (),
         Err(err) => {
-            eprintln!("{err}");
+            eprintln!("ERROR: {err}");
             std::process::exit(1);
         }
     }
