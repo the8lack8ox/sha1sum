@@ -3,6 +3,7 @@ name = "sha1sum"
 version = "0.1.0"
 edition = "2024"
 license = "MIT"
+description = "Compute SHA1 hash"
 authors = ["Christopher Atherton <the8lack8ox@pm.me>"]
 
 [dependencies]
